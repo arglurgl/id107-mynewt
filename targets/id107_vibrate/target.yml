@@ -1,0 +1,3 @@
+target.app: apps/vibrate
+target.bsp: hw/bsp/id107
+target.build_profile: debug
