@@ -26,19 +26,19 @@ syscfg.defs:
 
     UART_0:
         description: 'Whether to enable UART0'
-        value: 0
+        value: 1
     UART_0_PIN_TX:
         description: 'TX pin for UART0'
-        value: 9
+        value: 18
     UART_0_PIN_RX:
         description: 'RX pin for UART0'
-        value: 11
+        value: 17
     UART_0_PIN_RTS:
         description: 'RTS pin for UART0'
-        value: 8
+        value: -1
     UART_0_PIN_CTS:
         description: 'CTS pin for UART0'
-        value: 10
+        value: -1
 
     SPI_0_MASTER_PIN_SCK:
         description: 'SCK pin for SPI_0_MASTER'
