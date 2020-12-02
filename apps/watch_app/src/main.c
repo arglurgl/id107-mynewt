@@ -36,6 +36,8 @@
 #include "host/util/util.h"
 #include "services/gap/ble_svc_gap.h"
 
+#include "bleprph.h"
+
 #ifdef ARCH_sim
 #include "mcu/mcu_sim.h"
 #endif
@@ -283,6 +285,9 @@ main(int argc, char **argv)
 
     /* Initialize the NimBLE host configuration. */
     ble_hs_cfg.sync_cb = bleprph_on_sync;
+
+    rc = gatt_svr_init();
+    assert(rc == 0);
 
     rc = ble_svc_gap_device_name_set("nimble-bleprph");
     assert(rc == 0);
