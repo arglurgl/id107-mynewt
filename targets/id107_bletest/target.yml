@@ -1,0 +1,4 @@
+target.app: apps/ble_loader
+target.bsp: hw/bsp/id107
+target.build_profile: optimized
+

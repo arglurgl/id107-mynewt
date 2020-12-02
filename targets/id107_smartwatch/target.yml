@@ -1,0 +1,4 @@
+target.app: apps/watch_app
+target.bsp: hw/bsp/id107
+target.build_profile: optimized
+target.loader: apps/ble_loader

@@ -1,0 +1,45 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build, create-image, load, activate a split loader/app mynewt target",
+            "type": "shell",
+            "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname} && ./test_slot1.sh",
+            "problemMatcher": [],
+            "group": "build"
+        },
+        {
+            "label": "Build, create-image, load an unified mynewt target",
+            "type": "shell",
+            "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Open UART console",
+            "type": "shell",
+            "command": "gnome-terminal -- minicom -D /dev/ttyACM0 -b 115200",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "mynewttargetname",
+            "description": "Please pick mynewt target",
+            "options": [
+              "id107_smartwatch",
+              "id107_bletest",
+              "id107_oledtest",
+              "id107_vibrate",
+              "id107_boot",
+            ],
+            "default": "id107_smartwatch"
+          },
+      ]
+}
