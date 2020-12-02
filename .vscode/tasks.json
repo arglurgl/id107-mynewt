@@ -6,7 +6,7 @@
         {
             "label": "Build, create-image, load, activate a split loader/app mynewt target",
             "type": "shell",
-            "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname} && ./test_slot1.sh",
+            "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname} && python3 ./newtmgr_helper.py split_test",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -24,6 +24,12 @@
             "label": "Open UART console",
             "type": "shell",
             "command": "gnome-terminal -- minicom -D /dev/ttyACM0 -b 115200",
+            "problemMatcher": []
+        },
+        {
+            "label": "Reset via newtmgr",
+            "type": "shell",
+            "command": "newtmgr -c ble1 reset",
             "problemMatcher": []
         }
     ],
