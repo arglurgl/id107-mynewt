@@ -8,17 +8,17 @@
             "type": "shell",
             "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname} && ./test_slot1.sh",
             "problemMatcher": [],
-            "group": "build"
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "label": "Build, create-image, load an unified mynewt target",
             "type": "shell",
             "command": "newt build ${input:mynewttargetname} && newt create-image ${input:mynewttargetname} 1.0 && newt load ${input:mynewttargetname}",
             "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "label": "Open UART console",
