@@ -32,6 +32,7 @@
 
 /* BLE */
 #include "nimble/ble.h"
+#include "host/ble_gap.h"
 #include "host/ble_hs.h"
 #include "host/util/util.h"
 #include "services/gap/ble_svc_gap.h"
@@ -122,6 +123,8 @@ bleprph_advertise(void)
     memset(&adv_params, 0, sizeof adv_params);
     adv_params.conn_mode = BLE_GAP_CONN_MODE_UND;
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
+    adv_params.itvl_min = ((500) * 1000 / BLE_HCI_ADV_ITVL); //increase advertising interval for lower power
+    adv_params.itvl_max = ((500) * 1000 / BLE_HCI_ADV_ITVL);
     rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER,
                            &adv_params, bleprph_gap_event, NULL);
     if (rc != 0) {
