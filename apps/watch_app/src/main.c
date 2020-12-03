@@ -42,14 +42,24 @@
 #include "mcu/mcu_sim.h"
 #endif
 
+#define DISPLAY_TIMEOUT_MS 2000 //when to put display to sleep
+
+#define STATE_STANDBY 0
+#define STATE_DISPLAY_TIME 1
+
 struct os_timeval os_time;
 struct clocktime clocktime;
 static volatile int g_task1_loops;
+
+os_time_t last_interaction;
+
+int state = STATE_DISPLAY_TIME; //global state variable
 
 /* For LED toggling */
 int g_led_pin,g_front_button_pin,g_side_button_pin;
 
 static int bleprph_gap_event(struct ble_gap_event *event, void *arg);
+static void display_time();
 
 static void
 bleprph_advertise(void)
@@ -196,18 +206,49 @@ bleprph_on_sync(void)
 }
 
 /* The timer callout */
-static struct os_callout blinky_callout;
+static struct os_callout timer_event_callout;
 
 /*
- * Event callback function for timer events. It toggles the led pin.
+ * Event callback function for timer events.
  */
 static void
 timer_ev_cb(struct os_event *ev)
 {
-    assert(ev != NULL);
+    assert(ev != NULL);  
+        
+    if (hal_gpio_read(g_front_button_pin) == 1)
+    {
+        /* Pulse the motor, enable time display */
+        hal_gpio_write(g_led_pin,1);
+        os_time_delay(OS_TICKS_PER_SEC/1000*100);
+        hal_gpio_write(g_led_pin,0);
+        state = STATE_DISPLAY_TIME;
+        last_interaction = os_time_get();
+        ssd1306_ScreenOn();
+    }
+		
+    if (hal_gpio_read(g_side_button_pin) == 0)
+    {
+        /* Pulse the motor, save interaction time */
+        hal_gpio_write(g_led_pin,1);
+        os_time_delay(OS_TICKS_PER_SEC/10);
+        hal_gpio_write(g_led_pin,0);
+        last_interaction = os_time_get();
+    }
 
- ++g_task1_loops;
+    if (state == STATE_DISPLAY_TIME) display_time();
+    if ( (state != STATE_STANDBY) && ((os_time_get()-last_interaction) >= (OS_TICKS_PER_SEC * DISPLAY_TIMEOUT_MS/1000) ) ){
+        state = STATE_STANDBY;
+        ssd1306_ScreenOff();
+    }
 
+
+    os_callout_reset(&timer_event_callout, OS_TICKS_PER_SEC/100);
+}
+
+static void
+display_time()
+{
         ssd1306_Fill(Black);
         char str[12];
         sprintf(str, "Time:");
@@ -227,27 +268,6 @@ timer_ev_cb(struct os_event *ev)
         ssd1306_WriteString(str,Font_7x10,White);
 
         ssd1306_UpdateScreen();
-        os_time_delay(OS_TICKS_PER_SEC/10);
- 
-  
-        
-        if (hal_gpio_read(g_front_button_pin) == 1)
-        {
-			/* Pulse the motor */
-			hal_gpio_write(g_led_pin,1);
-			os_time_delay(OS_TICKS_PER_SEC/20);
-			hal_gpio_write(g_led_pin,0);
-		}
-		
-		if (hal_gpio_read(g_side_button_pin) == 0)
-        {
-			/* Pulse the motor */
-			hal_gpio_write(g_led_pin,1);
-			os_time_delay(OS_TICKS_PER_SEC/10);
-			hal_gpio_write(g_led_pin,0);
-		}
-
-    os_callout_reset(&blinky_callout, OS_TICKS_PER_SEC/100);
 }
 
 static void
@@ -256,10 +276,10 @@ init_timer(void)
     /*
      * Initialize the callout for a timer event.
      */
-    os_callout_init(&blinky_callout, os_eventq_dflt_get(),
+    os_callout_init(&timer_event_callout, os_eventq_dflt_get(),
                     timer_ev_cb, NULL);
 
-    os_callout_reset(&blinky_callout, OS_TICKS_PER_SEC/100);
+    os_callout_reset(&timer_event_callout, OS_TICKS_PER_SEC/100);
 }
 
 /**
@@ -315,15 +335,10 @@ main(int argc, char **argv)
     //Init Oled display
     ssd1306_Init();
 
-    ssd1306_Fill(Black);
-    ssd1306_SetCursor(0,0);
-    ssd1306_WriteString("OLED Test",Font_7x10,White);
-    ssd1306_UpdateScreen();
-    os_time_delay(OS_TICKS_PER_SEC/2);
-
     console_printf("oledtest setup done\n");
-
     console_printf("Starting default event queue\n");
+
+    last_interaction = os_time_get();
 
     while (1) {
         os_eventq_run(os_eventq_dflt_get());

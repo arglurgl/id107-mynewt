@@ -244,3 +244,11 @@ void ssd1306_SetCursor(uint8_t x, uint8_t y) {
     SSD1306.CurrentX = x;
     SSD1306.CurrentY = y;
 }
+
+void ssd1306_ScreenOff(){
+    ssd1306_WriteCommand(0xAE); //display off
+}
+
+void ssd1306_ScreenOn(){
+    ssd1306_WriteCommand(0xAF); //--turn on SSD1306 panel
+}
