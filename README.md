@@ -18,6 +18,7 @@ For apps, mynewt either has a 'unified' or 'split' architecture. Unified is a si
 - `id107_vibrate` 'Unified' test app that actuates the vibration motor with no display.
 - `id107_bletest` 'Unified' test app that only advertises over BLE. Basically uses the ble_loader in unified setup.
 - `id107_smartwatch` Loader/app (split) target that acts as a watch and is accessible for updates via newtmgr.
+- `id107_smartwatch_lowpower` Same as `id107_smartwatch` but optimizes some things not needed in the field/when not developing.
 
 ## Building, creating app image, and uploading
 Switch the name of the app with the target app you want. Bootloader only needs to be loaded/flashed once. See the mynewt documentation for more info.
