@@ -32,7 +32,7 @@ newt load id107_boot
 
 newt load id107_oledtest
 ```
-For split app/loader targets you need to test/activate the app. See test_slot1.sh for an example.
+For split app/loader targets you need to test/activate the app. See `newtmgr_helper.py` for an example.
 There are also tasks defined for VS Code in .vscode/task.json. Make sure to choose the correct task for unified/split build process.
 
 ### Fix Error when using JLinkGDBServer
