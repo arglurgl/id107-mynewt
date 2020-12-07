@@ -27,8 +27,8 @@
 #include "bsp/bsp.h"
 #include "hal/hal_gpio.h"
 #include "hal/hal_bsp.h"
-#include "hal/hal_spi.h"
 #include "ssd1306/ssd1306.h"
+#include "kx022/kx022.h"
 
 /* BLE */
 #include "nimble/ble.h"
@@ -254,7 +254,7 @@ display_time()
 {
         ssd1306_Fill(Black);
         char str[12];
-        sprintf(str, "Time:");
+        sprintf(str, "Z: %d",(int)(kx022_getAccZ()*1000));
         ssd1306_SetCursor(0,0);
         ssd1306_WriteString(str,Font_7x10,White);
 
@@ -303,8 +303,10 @@ main(int argc, char **argv)
 #endif
 
     sysinit();
-
-    console_printf("oledtest sysinit done\n");
+    console_printf("sysinit done\n");
+    
+    kx022_initialize();
+    console_printf("kx022 init done\n");
 
     /* Initialize the NimBLE host configuration. */
     ble_hs_cfg.sync_cb = bleprph_on_sync;
@@ -315,7 +317,7 @@ main(int argc, char **argv)
     rc = ble_svc_gap_device_name_set("nimble-bleprph");
     assert(rc == 0);
 
-    console_printf("oledtest ble setup done\n");
+    console_printf("ble setup done\n");
 
 	//init pins
     g_led_pin = LED_BLINK_PIN;
@@ -338,7 +340,7 @@ main(int argc, char **argv)
     //Init Oled display
     ssd1306_Init();
 
-    console_printf("oledtest setup done\n");
+    console_printf("oled setup done\n");
     console_printf("Starting default event queue\n");
 
     last_interaction = os_time_get();

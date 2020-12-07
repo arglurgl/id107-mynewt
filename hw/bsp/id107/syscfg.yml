@@ -24,7 +24,7 @@ syscfg.defs:
         description: 'Set to indicate that BSP has NRF51'
         value: 1
 
-    UART_0:
+    UART_0: # debug uart/serial on rx/tx test pads
         description: 'Whether to enable UART0'
         value: 1
     UART_0_PIN_TX:
@@ -40,7 +40,7 @@ syscfg.defs:
         description: 'CTS pin for UART0'
         value: -1
 
-    SPI_0_MASTER_PIN_SCK:
+    SPI_0_MASTER_PIN_SCK: # oled display
         description: 'SCK pin for SPI_0_MASTER'
         value:  1
     SPI_0_MASTER_PIN_MOSI:
@@ -65,10 +65,10 @@ syscfg.defs:
 
     I2C_0_PIN_SCL:
         description: 'SCL pin for I2C_0'
-        value:  7
+        value:  16
     I2C_0_PIN_SDA:
         description: 'SDA pin for I2C_0'
-        value:  30
+        value:  14
     I2C_0_FREQ_KHZ:
         description: 'Frequency in khz for I2C_0 bus'
         value:  100
@@ -85,12 +85,12 @@ syscfg.defs:
         defunct: 1
         value:  7
 
-    I2C_1_PIN_SCL:
+    I2C_1_PIN_SCL: # accelerometer
         description: 'SCL pin for I2C_1'
-        value:  13
+        value:  16
     I2C_1_PIN_SDA:
         description: 'SDA pin for I2C_1'
-        value:  12
+        value:  14
     I2C_1_FREQ_KHZ:
         description: 'Frequency in khz for I2C_1 bus'
         value:  100
@@ -121,7 +121,8 @@ syscfg.vals:
     COREDUMP_FLASH_AREA: FLASH_AREA_IMAGE_1
     MCU_DCDC_ENABLED: 1
     XTAL_32768: 1
-    SPI_0_MASTER: 1
+    SPI_0_MASTER: 1 #needed for oled display
+    I2C_1: 1 #needed for accelerometer
     
 
 syscfg.vals.BLE_LP_CLOCK:
